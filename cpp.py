@@ -10,7 +10,7 @@ import re
 from dataclasses import dataclass
 from typing import Iterable, Optional
 
-from Tools.PythonUtilities.placeholders import apply_placeholders
+from .placeholders import apply_placeholders
 
 # We only support a subset of preprocessor commands to avoid having to perform full C++ parsing and evaluation.
 if_preprocessor_re: re.Pattern[str] = re.compile(r"\s*#if\s+.*")
