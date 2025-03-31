@@ -1,3 +1,9 @@
+#  Copyright 2023 Hel Industries, all rights reserved.
+#
+#  For licensing terms, Please find the licensing terms in the closest
+#  LICENSE.txt in this repository file going up the directory tree.
+#
+
 import re
 
 placeholder_re: re.Pattern[str] = re.compile(r"(?P<indent>[ \t]+)?(?P<placeholder>\$\{(?P<name>[a-zA-Z0-9_]+?)(?P<options>:[a-z_,]+)*})")
