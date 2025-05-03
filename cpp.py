@@ -98,8 +98,10 @@ class CompilerArgs:
 
 def parse_compiler_args(compiler_args: list[str]) -> CompilerArgs:
     args = CompilerArgs()
-    for arg in compiler_args:
-        arg = arg.strip()
+    current_prefix = None
+    in_args = list(compiler_args)
+    while len(in_args) > 0:
+        arg = in_args.pop(0).strip()
         if arg.startswith("\"") and arg.endswith("\""):
             arg = arg[1:-1]
         if arg.startswith("-D"):
@@ -108,6 +110,22 @@ def parse_compiler_args(compiler_args: list[str]) -> CompilerArgs:
                 args.defines[key_value[0]] = ""
             else:
                 args.defines[key_value[0]] = key_value[1]
+        elif arg.startswith("-iprefix"):
+            arg = arg[8:]
+            if len(arg.strip()) < 1:
+                arg = in_args.pop(0)
+            if arg.startswith("\"") and arg.endswith("\""):
+                arg = arg[1:-1]
+            current_prefix = arg
+        elif arg.startswith("-iwithprefixbefore"):
+            if current_prefix is None:
+                raise ValueError("No prefix specified for -iwithprefixbefore")
+            arg = arg[18:]
+            if len(arg.strip()) < 1:
+                arg = in_args.pop(0)
+            if arg.startswith("\"") and arg.endswith("\""):
+                arg = arg[1:-1]
+            args.header_paths.append(os.path.join(current_prefix, arg))
         elif arg.startswith("-I"):
             args.header_paths.append(arg[2:])
         elif arg.startswith("-L"):
